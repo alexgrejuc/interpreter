@@ -1,4 +1,5 @@
 #include "token.hpp"
+#include "cstring" 
 
 /*******************************************************************************
  * Token Implementation 
@@ -12,14 +13,19 @@ Token::Token(Type type){
     this->type = type;
 }
 
-Token::Token(Type type, int value){
+Token::Token(Type type, int integer){
     this->type = type; 
-    this->value.integer = value; 
+    value.integer = integer; 
 }
 
-Token::Token(Type type, char value){
+Token::Token(Type type, char op){
     this->type = type; 
-    this->value.op = value; 
+    value.op = op; 
+}
+
+Token::Token(Type type, const char* id){
+    this->type = type; 
+    strncpy(value.identifier, id, sizeof(value.identifier)); // no null term if s > d  
 }
 
 Value Token::get_value(){
@@ -38,3 +44,4 @@ bool Token::is_type(Type t){
 int Token::get_int(){
     return value.integer; 
 }
+

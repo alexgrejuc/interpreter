@@ -11,8 +11,7 @@ using std::endl;
 /* prompts user for calculator expressions and then uses an Parser
  * to evaluate them */ 
 int main(int argc, char* argv[]){
-    //Interpreter calc(""); 
-	string text; 
+    string text; 
 
     while(1){
         cout << "calc> "; 
@@ -26,7 +25,7 @@ int main(int argc, char* argv[]){
         // evaluate if expression is well-formed, print error otherwise 
         try {
             int result = calc.interpret(); 
-            cout << result << endl; 
+            cout << '\n' << result << endl; 
 			//calc.display();
 			cout << endl; 
 

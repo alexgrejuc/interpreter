@@ -1,14 +1,20 @@
 #ifndef TOKEN_HPP
 #define TOKEN_HPP 
 
+#include <string>
+using std::string;
+
+#define MAX_ID_LEN 255 // g++ supports indefinite length identifiers ... why ?? 
+
 // the valid types which can be interpreted
 // note that NONE is never used aside from the default constructor 
-enum Type{INTEGER, ADD_SUB, MULT_DIV, WS, _EOF, PAR, NONE}; 
+enum Type{INTEGER, ADD_SUB, MULT_DIV, WS, _EOF, PAR, BEGIN, END, DOT, ID, ASSIGN, SEMI, ERROR, NONE}; 
 
 // a value in the language can either be an integer or an operator 
 union Value{
     int integer; 
-    char op; 
+    char op;
+    char identifier[MAX_ID_LEN + 1];  
 };
 
 // a token, i.e. the smallest interpretable unit of the text 
@@ -22,12 +28,10 @@ class Token{
     
     Token();
 
-    // for tokens without a value (e.g. _EOF)
-    Token(Type type);
-
-    Token(Type type, int value);
-
-    Token(Type type, char value);
+    Token(Type type); // for tokens without a value (e.g. _EOF)
+    Token(Type type, int integer);
+    Token(Type type, char op);
+    Token(Type type, const char* id); 
 
     Value get_value();
 
