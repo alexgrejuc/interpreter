@@ -4,12 +4,24 @@
 
 #include "lexer.hpp" 
 #include <math.h> 
+#include <string.h>
 #include <iostream> 
 
 using std::cout; 
 using std::endl; 
+using std::string; 
 
 #define OVERFLOW '~' // a dirty way for peek() to indicate it has gone out of bounds  
+
+Lexer::Lexer(){
+    Lexer(string("")); 
+}
+
+Lexer::Lexer(string text){
+    pos = 0; 
+    this->text = text;
+    reserve_keywords(); 
+}
 
 int Lexer::to_int(char c){
     return c - '0'; 
@@ -50,19 +62,26 @@ char Lexer::peek(){
 }
 
 Token Lexer::identify(){
-    string name(1, text[pos++]); 
+    char name[MAX_ID_LEN + 1];
+    int name_pos = 0; 
 
     while(pos < text.length() && is_alphanumeric(text[pos])){
-        name+= text[pos++];
+        if(name_pos < MAX_ID_LEN){
+            name[name_pos++] = text[pos++];
+        }
+        else {
+            break; 
+        }
     }
 
-    if(name.length() <= MAX_ID_LEN){
+    name[name_pos] = '\0'; 
+    
+    if(name_pos < MAX_ID_LEN){
         if(reserved_keywords.find(name) != reserved_keywords.end()){
             return reserved_keywords[name]; 
         }
         else {
-            char* name_string = new char[name.length() + 1]; 
-            return Token(ID, name_string); 
+            return Token(ID, name); 
         }
     }
 
@@ -73,16 +92,6 @@ Token Lexer::identify(){
 void Lexer::reserve_keywords(){
     reserved_keywords["BEGIN"] = Token(BEGIN, "BEGIN"); 
     reserved_keywords["END"] = Token(END, "END"); 
-}
-
-Lexer::Lexer(){
-    Lexer(""); 
-}
-
-Lexer::Lexer(string text){
-    pos = 0; 
-    this->text = text;
-    reserve_keywords(); 
 }
 
 // returns non-whitespace token or EOF token from text  
@@ -138,6 +147,7 @@ Token Lexer::get_next_token(){
         pos+= 2;
         return Token(ASSIGN, ":=");
     }
+    
     if(current_char == ';'){
         pos++; 
         return Token(SEMI, current_char);

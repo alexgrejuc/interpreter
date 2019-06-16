@@ -12,15 +12,39 @@
  * Based off of Ruslan Spivak's tutorials (thanks!)
  * https://ruslanspivak.com/lsbasi-part1/ 
  * 
- * precedence: 
+ * arithmetic precedence 
  * parenthesis
  * mult/div
  * add/sub 
  * 
- * expr: term(ADD_SUB term)*
+ * The Grammar: 
+ * terminals are uppercase and nonterminals are lowercase 
+ * 
+ * program: compound_statement DOT
+ *
+ * compound_statement: BEGIN statement_list END
+ *
+ * statement_list: statement 
+ *               | statement SEMI statement_list 
+ *
+ * statement: compound_statement 
+ *          | assignment 
+            | empty 
+ *
+ * assignment: variable ASSIGN expression 
+ *
+ * expression: term(ADD_SUB term)*
+ *
  * term: factor(MULT_DIV factor)*  
- * factor: INTEGER | (ADD_SUB)factor | par
- * par: (expr expr*)    
+ *
+ * factor: INTEGER 
+ *       | (ADD_SUB)factor 
+ *       | par
+ *
+ * par: (expression expression*)    
+ *
+ * empty: 
+ * variable: [a-z]*[0-9|a-Z]* // not the actual regex but you get the idea...
  ******************************************************************************/
 
 #ifndef PARSER_HPP
@@ -30,6 +54,7 @@
 #include "ast.hpp"
 #include "token.hpp"
 #include "lexer.hpp" 
+#include <list> 
 
 /* interprets the value of a calculator expression and returns its value
  * uses the lexer to tokenize the string, parses tokens
@@ -46,7 +71,16 @@ class Parser{
         // consumes/eats the token and grabs the next one if it is of correct type & val
         // otherwise there is an error in the expression so we throw an error
         void eat(Type token_type, char val);
-
+        
+        // functions to parse the rules specified in the above grammar 
+        AST* program(); 
+        AST* compound_statement(); 
+        std::list<AST*> statement_list();
+        Variable* variable();
+        AST* statement(); 
+        AST* assignment();
+        AST* empty(); 
+        
         // parses a parenthesis-containing expression  
         AST* par();
 
@@ -71,7 +105,7 @@ class Parser{
 
         // parses 3-groups of tokens into an add/sub expression
         // accumulates their evaluated result in the left value
-        AST* expr();
+        AST* expression();
 
         // evaluates a binary artihmetic expression 
         int eval(Value l, Value r, Value operand);

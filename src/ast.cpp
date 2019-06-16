@@ -1,5 +1,16 @@
 #include "ast.hpp" 
 #include "node_visitor.hpp" 
+
+using std::list; 
+
+AST::AST(){
+
+}
+
+AST::AST(Token token){
+    this->token = token; 
+}
+
 Value AST::get_value(){
     return token.get_value(); 
 }
@@ -10,6 +21,39 @@ Type AST::get_type(){
 
 Token AST::get_token(){
     return token; 
+}
+
+Compound::Compound(list<AST*> children){
+    this->children = children; 
+}
+
+Value Compound::accept(NodeVisitor* v){
+    return v->visit(this);
+}
+
+void Compound::add_child(AST* child){
+    children.push_back(child);
+}
+
+Variable::Variable(Token token) : AST(token){
+
+}
+
+Value Variable::accept(NodeVisitor* v){
+    return v->visit(this);
+}
+
+Assignment::Assignment(Variable* left, AST* right){
+    this->left = left; 
+    this->right = right; 
+}
+
+Value Assignment::accept(NodeVisitor* v){
+    return v->visit(this); 
+}
+
+Value NoOp::accept(NodeVisitor* v){
+    return v->visit(this); 
 }
 
 BinOp::BinOp(){

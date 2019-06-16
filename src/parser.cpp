@@ -3,33 +3,94 @@
  ******************************************************************************/
 
 #include "parser.hpp" 
+#include <iostream>
+
+using namespace std; 
+using std::list; 
+using std::cerr; 
 
 // consumes/eats the token and grabs the next one if it is of correct type
 // otherwise there is an error in the expression so we throw an error
 void Parser::eat(Type token_type){
     if(current_token.is_type(token_type)) 
         current_token = lexer.get_next_token(); 
-    else
+    else{
+        cerr << "Expected " << TYPE_NAMES[token_type] << " but got " << TYPE_NAMES[current_token.get_type()] << endl; 
         throw "error eating token";  
+    }
 }
+
 
 // consumes/eats the token and grabs the next one if it is of correct type & val
 // otherwise there is an error in the expression so we throw an error
 void Parser::eat(Type token_type, char val){
     if(current_token.is_type(token_type) && current_token.get_value().op == val) 
         current_token = lexer.get_next_token(); 
-    else
+    else{
+        cerr << "Expected " << token_type << " with value " << val << " but got " << current_token.get_type() << " with value " << current_token.get_value().op << endl; 
         throw "error eating token";  
+    }
+}
+
+AST* Parser::program(){
+    AST* tree = compound_statement(); 
+    eat(DOT); 
+    return tree; 
+}
+
+AST* Parser::compound_statement(){
+    eat(BEGIN);
+    list<AST*> statements = statement_list();  
+    eat(END); 
+    return new Compound(statements); 
+}
+
+list<AST*> Parser::statement_list(){
+    AST* s = statement(); 
+
+    list<AST*> statements(1, s); 
+
+    while(current_token.get_type() == SEMI){
+        eat(SEMI); 
+        statements.push_back(statement()); 
+    }
+
+    if(current_token.get_type() == ID) throw "error eating token";
+
+    return statements; 
+}
+
+AST* Parser::statement(){
+    AST* node; 
+    Type t = current_token.get_type(); 
+
+    if(t == BEGIN) node = compound_statement();
+    else if (t == ID) node = assignment();
+    else node = empty();
+
+    return node; 
+}
+
+AST* Parser::assignment(){
+    Variable* left = variable();
+    eat(ASSIGN); 
+    return new Assignment(left, expression()); 
+}
+
+Variable* Parser::variable(){
+    Variable* var = new Variable(current_token); 
+    eat(ID); 
+    return var; 
+}
+
+AST* Parser::empty(){
+    return new NoOp(); 
 }
 
 // parses a parenthesis-containing expression  
 AST* Parser::par(){
-    //Token par = current_token; 
-    
     eat(PAR, '('); 
-    //par = Token(INTEGER, expr().integer);  
-    AST* par = expr(); 
-    //AST* par = new Num(expr()->get_token()); 
+    AST* par = expression(); 
     eat(PAR, ')');
 
     return par; 
@@ -54,8 +115,8 @@ AST* Parser::factor(){
 
     if(result.get_type() == PAR) return par(); 
 	else if(result.get_type() == ADD_SUB) return unary();
-	else return number(); 
-    
+	else if(result.get_type() == INTEGER) return number();
+    else return variable();  
 }
 
 // eats a *,/ operand and returns its value
@@ -87,7 +148,7 @@ AST* Parser::term(){
 
 // parses 3-groups of tokens into an add/sub expression
 // accumulates their evaluated result in the left value 
-AST* Parser::expr(){
+AST* Parser::expression(){
     AST* left = term();  
 
     while(current_token.get_type() == ADD_SUB){
@@ -99,7 +160,7 @@ AST* Parser::expr(){
 }
 
 AST* Parser::parse(){
-    return expr(); 
+    return program(); 
 }
 
 // evaluates a binary artihmetic expression 
@@ -120,7 +181,9 @@ Parser::Parser(string text){
     current_token = lexer.get_next_token();   
 }
 
-Parser::Parser(){
-    lexer = Lexer("");
-    current_token = lexer.get_next_token();   
+
+Parser::Parser(){     
+    //lexer(); 
+    lexer = Lexer();
+    //current_token = lexer.get_next_token();   
 } 

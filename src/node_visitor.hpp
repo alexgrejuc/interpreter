@@ -18,6 +18,10 @@ class NodeVisitor{
         AST* ast;
     public:
         NodeVisitor(string text); 
+        virtual Value visit(Compound* n) = 0; 
+        virtual Value visit(Variable* n) = 0; 
+        virtual Value visit(Assignment* n) = 0; 
+        virtual Value visit(NoOp* n) = 0;  
 		virtual Value visit(BinOp*) = 0; 
         virtual Value visit(Num*) = 0;
 		virtual Value visit(UnOp*) = 0; 
@@ -27,6 +31,10 @@ class NodeVisitor{
 class Interpreter : NodeVisitor{
     private:
     public: 
+        Value visit(Compound* n);
+        Value visit(Variable* n); 
+        Value visit(Assignment* n);
+        Value visit(NoOp* n); 
         Value visit(BinOp* n); 
         Value visit(UnOp* n); 
 		Value visit(Num* n); 
@@ -38,10 +46,16 @@ class Interpreter : NodeVisitor{
         int node_visitor();   
 }; 
 
+/*
+worked before the pascal-like features were added -- to tedious to maintain so I nixed it 
 class VisitorRPN : NodeVisitor{
 	public:
 		VisitorRPN(string text); 
 		void display();  
+        Value visit(Compound* n);
+        Value visit(Variable* n); 
+        Value visit(Assignment* n);
+        Value visit(NoOp* n); 
 		Value visit(BinOp*);
 		Value visit(UnOp*);
 		Value visit(Num*); 
@@ -51,9 +65,13 @@ class VisitorLisp : NodeVisitor{
 	public:
 		VisitorLisp(string text); 
 		void display(); 
+        Value visit(Compound* n);
+        Value visit(Variable* n); 
+        Value visit(Assignment* n);
+        Value visit(NoOp* n); 
 		Value visit(UnOp*);  
 		Value visit(BinOp*);
 		Value visit(Num*); 
 };
-
+*/ 
 #endif 

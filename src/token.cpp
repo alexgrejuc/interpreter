@@ -1,6 +1,8 @@
 #include "token.hpp"
 #include "cstring" 
 
+const char* TYPE_NAMES[] =  {"INTEGER", "ADD_SUB", "MULT_DIV", "WS", "_EOF", "PAR", "BEGIN", "END", "DOT", "ID", "ASSIGN", "SEMI", "ERROR", "NONE"};
+
 /*******************************************************************************
  * Token Implementation 
  ******************************************************************************/

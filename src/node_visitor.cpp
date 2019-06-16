@@ -11,6 +11,34 @@ NodeVisitor::NodeVisitor(string text){
 
 Interpreter::Interpreter(string text) : NodeVisitor(text) {}
 
+Value Interpreter::visit(Compound* n){
+    Value val;  
+    val.integer = 0; 
+
+    return val; 
+}
+
+Value Interpreter::visit(Variable* n){
+    Value val;
+    val.integer = 0; 
+
+    return val; 
+}
+
+Value Interpreter::visit(Assignment* n){
+    Value val;
+    val.integer = 0; 
+
+    return val; 
+}
+
+Value Interpreter::visit(NoOp* n){
+    Value val;
+    val.integer = 0; 
+
+    return val; 
+}
+
 Value Interpreter::visit(BinOp* n){
     Value val; 
 
@@ -56,6 +84,7 @@ void Interpreter::display(){
 	cout << interpret() << endl; 
 }
 
+/* Worked before the pascal-like features were added -- too tedious to maintain so I nixed it 
 VisitorRPN::VisitorRPN(string text) : NodeVisitor(text) {}
 	
 void VisitorRPN::display(){
@@ -118,3 +147,4 @@ Value VisitorLisp::visit(Num* n){
 	Value val; 
 	return val; 
 }
+*/ 
