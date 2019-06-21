@@ -1,7 +1,6 @@
 #ifndef TOKEN_HPP
 #define TOKEN_HPP 
 
-#define MAX_ID_LEN 255 // g++ supports indefinite length identifiers ... why ?? 
 #define TEMP_MAX_STR 2048 // will remove this limitation 
 
 // the valid types which can be interpreted
@@ -14,7 +13,6 @@ extern const char* TYPE_NAMES[];
 union Value{
     int integer; 
     char op;
-    char identifier[MAX_ID_LEN + 1];
     char str[TEMP_MAX_STR];  
 };
 

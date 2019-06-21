@@ -27,7 +27,7 @@ Token::Token(Type type, char op){
 
 Token::Token(Type type, const char* id){
     this->type = type; 
-    strncpy(value.identifier, id, sizeof(value.identifier)); // no null term if s > d  
+    strncpy(value.str, id, sizeof(value.str)); // no null term if s > d  
 }
 
 Value Token::get_value(){

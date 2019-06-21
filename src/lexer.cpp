@@ -62,11 +62,11 @@ char Lexer::peek(){
 }
 
 Token Lexer::identify(){
-    char name[MAX_ID_LEN + 1];
+    char name[TEMP_MAX_STR + 1];
     int name_pos = 0; 
 
     while(pos < text.length() && is_alphanumeric(text[pos])){
-        if(name_pos < MAX_ID_LEN){
+        if(name_pos < TEMP_MAX_STR){
             name[name_pos++] = text[pos++];
         }
         else {
@@ -76,7 +76,7 @@ Token Lexer::identify(){
 
     name[name_pos] = '\0'; 
     
-    if(name_pos < MAX_ID_LEN){
+    if(name_pos < TEMP_MAX_STR){
         if(reserved_keywords.find(name) != reserved_keywords.end()){
             return reserved_keywords[name]; 
         }
@@ -85,7 +85,7 @@ Token Lexer::identify(){
         }
     }
 
-    cout << "Identifer " << name << " exceeds the maximum length of " << MAX_ID_LEN << endl; 
+    cout << "Identifer " << name << " exceeds the maximum length of " << TEMP_MAX_STR << endl; 
     return Token(ERROR); 
 }
 

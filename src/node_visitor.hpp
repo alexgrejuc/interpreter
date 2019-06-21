@@ -28,8 +28,11 @@ class NodeVisitor{
 		virtual void display() = 0;  
 };
 
+typedef std::map<string, Value> SymbolTable; 
+
 class Interpreter : NodeVisitor{
     private:
+        SymbolTable symbol_table; // Just a global scope for now, lots of work to be done later;      
     public: 
         Value visit(Compound* n);
         Value visit(Variable* n); 
@@ -40,14 +43,15 @@ class Interpreter : NodeVisitor{
 		Value visit(Num* n); 
 
         Interpreter(string text);
+        void display_symbols(); 
         void display();
-		int interpret(); 
+		void interpret(); 
         int interpret(string text); 
         int node_visitor();   
 }; 
 
 /*
-worked before the pascal-like features were added -- to tedious to maintain so I nixed it 
+worked before the pascal-like features were added -- too tedious to maintain so I nixed it 
 class VisitorRPN : NodeVisitor{
 	public:
 		VisitorRPN(string text); 

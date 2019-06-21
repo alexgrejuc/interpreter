@@ -1,4 +1,9 @@
 *.out
 *.o
 *.swp
+
+# pascal programs have extension .pas
+# my pascal-like programs have extension .apas
+# that I don't want to push are temporary .apas i.e. tapas 
+*.tapas 
 catch.hpp 

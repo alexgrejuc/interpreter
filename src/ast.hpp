@@ -18,10 +18,17 @@ class AST{
         virtual Value accept(NodeVisitor*) = 0;   
 }; 
 
+typedef std::list<AST*> Nodes;
+typedef Nodes::const_iterator NodesConstIterator; 
+
 class Compound : public AST{
     private:
         std::list<AST*> children;
     public:
+
+        NodesConstIterator begin() { return children.begin(); }
+        NodesConstIterator end() { return children.end(); }
+
         Compound(std::list<AST*> children);
         Value accept(NodeVisitor*); 
         void add_child(AST* child);  
@@ -30,14 +37,16 @@ class Compound : public AST{
 class Variable : public AST{
     public:
         Variable(Token token); 
+        const char* get_name();
         Value accept(NodeVisitor*); 
 };
 
 class Assignment: public AST{
     private:
         Variable* left; 
-        AST* right; 
     public:
+        AST* right; 
+        const char* get_name();
         Assignment(Variable* left, AST* right); 
         Value accept(NodeVisitor*); 
 };

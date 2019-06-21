@@ -13,22 +13,26 @@ Interpreter::Interpreter(string text) : NodeVisitor(text) {}
 
 Value Interpreter::visit(Compound* n){
     Value val;  
-    val.integer = 0; 
+
+    for (NodesConstIterator i = n->begin(); i != n->end(); i++){
+        (*i)->accept(this); 
+    }
 
     return val; 
 }
 
 Value Interpreter::visit(Variable* n){
-    Value val;
-    val.integer = 0; 
-
-    return val; 
+    if(symbol_table.find(n->get_name()) != symbol_table.end()){
+        return symbol_table[n->get_name()]; 
+    }
+    else{
+        throw "error: uninitialized variable"; 
+    }
 }
 
 Value Interpreter::visit(Assignment* n){
     Value val;
-    val.integer = 0; 
-
+    symbol_table[n->get_name()] = n->right->accept(this);  
     return val; 
 }
 
@@ -75,13 +79,22 @@ Value Interpreter::visit(Num* n){
     return n->get_value();
 }
 
-int Interpreter::interpret(){
+void Interpreter::interpret(){
     ast = parser.parse();
-    return ast->accept(this).integer; 
+    ast->accept(this);
+}
+
+void Interpreter::display_symbols(){
+    cout << "Saved data: \n" << endl; 
+    
+    for(auto const& i : symbol_table){
+        cout << i.first << " : " << i.second.integer << endl; 
+    }
 }
 
 void Interpreter::display(){
-	cout << interpret() << endl; 
+	interpret(); 
+    display_symbols(); 
 }
 
 /* Worked before the pascal-like features were added -- too tedious to maintain so I nixed it 

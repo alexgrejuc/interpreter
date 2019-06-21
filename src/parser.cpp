@@ -20,7 +20,6 @@ void Parser::eat(Type token_type){
     }
 }
 
-
 // consumes/eats the token and grabs the next one if it is of correct type & val
 // otherwise there is an error in the expression so we throw an error
 void Parser::eat(Type token_type, char val){
@@ -40,22 +39,22 @@ AST* Parser::program(){
 
 AST* Parser::compound_statement(){
     eat(BEGIN);
-    list<AST*> statements = statement_list();  
+    Nodes statements = statement_list();  
     eat(END); 
     return new Compound(statements); 
 }
 
-list<AST*> Parser::statement_list(){
+Nodes Parser::statement_list(){
     AST* s = statement(); 
 
-    list<AST*> statements(1, s); 
+    Nodes statements(1, s); 
 
     while(current_token.get_type() == SEMI){
         eat(SEMI); 
         statements.push_back(statement()); 
     }
 
-    if(current_token.get_type() == ID) throw "error eating token";
+    if(current_token.get_type() == ID) throw "Unexpected assignment. Did you forget a ; ?";
 
     return statements; 
 }
@@ -111,11 +110,11 @@ AST* Parser::unary(){
 
 // parses a "factor" i.e. integers or parenthetical expressions   
 AST* Parser::factor(){
-    Token result = current_token; 
+    Type t = current_token.get_type(); 
 
-    if(result.get_type() == PAR) return par(); 
-	else if(result.get_type() == ADD_SUB) return unary();
-	else if(result.get_type() == INTEGER) return number();
+    if(t == PAR) return par(); 
+	else if(t == ADD_SUB) return unary();
+	else if(t == INTEGER) return number();
     else return variable();  
 }
 

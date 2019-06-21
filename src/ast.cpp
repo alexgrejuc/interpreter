@@ -43,6 +43,10 @@ Value Variable::accept(NodeVisitor* v){
     return v->visit(this);
 }
 
+const char* Variable::get_name(){
+    return get_value().str; 
+}
+
 Assignment::Assignment(Variable* left, AST* right){
     this->left = left; 
     this->right = right; 
@@ -52,6 +56,9 @@ Value Assignment::accept(NodeVisitor* v){
     return v->visit(this); 
 }
 
+const char* Assignment::get_name(){
+    return left->get_value().str; 
+}
 Value NoOp::accept(NodeVisitor* v){
     return v->visit(this); 
 }

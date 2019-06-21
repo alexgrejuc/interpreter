@@ -75,7 +75,7 @@ class Parser{
         // functions to parse the rules specified in the above grammar 
         AST* program(); 
         AST* compound_statement(); 
-        std::list<AST*> statement_list();
+        Nodes statement_list();
         Variable* variable();
         AST* statement(); 
         AST* assignment();
