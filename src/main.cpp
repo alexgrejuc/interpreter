@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
     else if(argc == 2 && !strcmp(argv[1], "-i")){
         // interactive mode: takes input line-by-line and interprets it. 
         do{
-            cout << "calc> "; 
+            cout << "> "; 
             getline(cin, text); 
         } while(run(text)); 
     }

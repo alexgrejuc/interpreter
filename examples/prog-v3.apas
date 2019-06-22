@@ -1,0 +1,17 @@
+BEGIN
+    a := 3;
+    b := a + 1; 
+    c := b / 2; 
+    
+    BEGIN
+        a := 4; 
+        e := a; 
+    END; 
+
+    BEGIN
+        precedence := 4 / 2 + 3;  
+        parens := (((((((1))))))) + ((9 + 1) / 5); 
+        unaryMinus := -1 - -1;
+        whyNot := 1-----------------------------1; 
+    END
+END. 
