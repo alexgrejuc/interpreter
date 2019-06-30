@@ -1,5 +1,6 @@
-#include "node_visitor.hpp" 
+#include "node_visitor.hpp"
 #include "ast.hpp" 
+#include "utilities.hpp" 
 #include <iostream> 
 
 using std::cout; 
@@ -22,17 +23,23 @@ Value Interpreter::visit(Compound* n){
 }
 
 Value Interpreter::visit(Variable* n){
-    if(symbol_table.find(n->get_name()) != symbol_table.end()){
-        return symbol_table[n->get_name()]; 
+    char* lower_name = make_lower(n->get_name()); 
+    
+        if(symbol_table.find(lower_name) != symbol_table.end()){
+        return symbol_table[lower_name]; 
     }
     else{
         throw "error: uninitialized variable"; 
     }
+    
+    delete [] lower_name; 
 }
 
 Value Interpreter::visit(Assignment* n){
+    char* lower_name = make_lower(n->get_name()); 
     Value val;
-    symbol_table[n->get_name()] = n->right->accept(this);  
+    symbol_table[lower_name] = n->right->accept(this);  
+    delete [] lower_name; 
     return val; 
 }
 

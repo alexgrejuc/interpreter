@@ -6,6 +6,8 @@ BEGIN
     BEGIN
         a := 4; 
         e := a; 
+        caSE := 3000; 
+        insensitive := case; 
     END; 
 
     BEGIN

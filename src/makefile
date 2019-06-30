@@ -1,16 +1,20 @@
 CXXFLAGS = -Wall -std=c++11 -g 
 TESTFLAGS = -Wall -std=c++11 -o test-calc.out  
+OBJECTS = parser.o lexer.o utilities.o node_visitor.o token.o ast.o
 
-calculator.out: parser.o lexer.o node_visitor.o token.o ast.o main.cpp
-	g++ main.cpp parser.o lexer.o node_visitor.o ast.o token.o -o calculator.out $(CXXFLAGS)
+calculator.out:  $(OBJECTS) main.cpp
+	g++ main.cpp $(OBJECTS) -o calculator.out $(CXXFLAGS)
 
 parser.o: parser.hpp parser.cpp ast.o 
 	g++ -c parser.cpp $(CXXFLAGS) 
 
-lexer.o: lexer.hpp lexer.cpp 
+lexer.o: lexer.hpp lexer.cpp utilities.hpp utilities.cpp  
 	g++ -c lexer.cpp $(CXXFLAGS) 
 
-node_visitor.o: node_visitor.hpp node_visitor.cpp
+utilities.o: utilities.hpp utilities.cpp
+	g++ -c utilities.cpp $(CXXFLAGS) 
+
+node_visitor.o: node_visitor.hpp node_visitor.cpp utilities.hpp utilities.cpp
 	g++ -c node_visitor.cpp 
 
 ast.o: ast.hpp ast.cpp token.hpp  

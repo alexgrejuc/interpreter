@@ -64,14 +64,17 @@ class Parser{
         Token current_token;
         Lexer lexer;  
 
+        // prints a somewhat informative parse error message and throws and exception 
+        void parse_error(Kind acceptable, Type actual);
+        void parse_error(Type acceptable, Type actual); 
+
         // consumes/eats the token and grabs the next one if it is of correct type
         // otherwise there is an error in the expression so we throw an error
         void eat(Type token_type);
-
-        // consumes/eats the token and grabs the next one if it is of correct type & val
-        // otherwise there is an error in the expression so we throw an error
         void eat(Type token_type, char val);
         
+        void eat_multdiv(); 
+
         // functions to parse the rules specified in the above grammar 
         AST* program(); 
         AST* compound_statement(); 

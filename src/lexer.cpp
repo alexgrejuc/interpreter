@@ -3,8 +3,9 @@
  ******************************************************************************/
 
 #include "lexer.hpp" 
-#include <math.h> 
+#include "utilities.hpp"
 #include <string.h>
+#include <ctype.h> 
 #include <iostream> 
 
 using std::cout; 
@@ -23,46 +24,13 @@ Lexer::Lexer(string text){
     reserve_keywords(); 
 }
 
-int Lexer::to_int(char c){
-    return c - '0'; 
-}
-
-bool Lexer::is_ws(char c){
-    return c == ' ' || c == '\n' || c == '\t'; 
-}
-
-bool Lexer::is_integer(char c){
-    return (c >= '0' && c <= '9'); 
-}
-
-bool Lexer::is_letter(char c){
-    return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
-}
-
-bool Lexer::is_alphanumeric(char c){
-   return (is_letter(c) || (c >= '0' && c <= '9')); 
-}
-
-// converts a string to an integer by summing (integer * place value) for all chars 
-int Lexer::str_to_int(string literal){
-    int num = 0; 
-    int place = 0; 
-
-    // sum one's place...n's place 
-    for(int i = literal.size() - 1; i >= 0; i--){
-        num+= to_int(literal[i]) * pow(10, place++); 
-    }
-
-    return num; 
-}
-
 char Lexer::peek(){
     unsigned int peek_pos = pos + 1; 
     return (peek_pos >= text.length()) ? OVERFLOW : text[peek_pos]; 
 }
 
 Token Lexer::identify(){
-    char name[TEMP_MAX_STR + 1];
+    char name[TEMP_MAX_STR + 1], lower_name[TEMP_MAX_STR + 1];
     int name_pos = 0; 
 
     while(pos < text.length() && is_alphanumeric(text[pos])){
@@ -75,10 +43,13 @@ Token Lexer::identify(){
     }
 
     name[name_pos] = '\0'; 
+    strcpy(lower_name, name);
     
     if(name_pos < TEMP_MAX_STR){
-        if(reserved_keywords.find(name) != reserved_keywords.end()){
-            return reserved_keywords[name]; 
+        to_lower(lower_name);  
+        
+        if(reserved_keywords.find(lower_name) != reserved_keywords.end()){
+            return reserved_keywords[lower_name]; 
         }
         else {
             return Token(ID, name); 
@@ -90,8 +61,8 @@ Token Lexer::identify(){
 }
 
 void Lexer::reserve_keywords(){
-    reserved_keywords["BEGIN"] = Token(BEGIN, "BEGIN"); 
-    reserved_keywords["END"] = Token(END, "END"); 
+    reserved_keywords["begin"] = Token(BEGIN, "BEGIN"); 
+    reserved_keywords["end"] = Token(END, "END"); 
 }
 
 // returns non-whitespace token or EOF token from text  
@@ -118,16 +89,21 @@ Token Lexer::get_next_token(){
         return integer; 
     }
 
-    // return an mult/div token 
-    if(current_char == '*' || current_char == '/'){
-        Token op = Token(MULT_DIV, current_char);
+    if(current_char == '*'){
+        Token op = Token(MULT, current_char, MULT_DIV_K);
         pos++; 
         return op;  
     }
 
+    if(current_char == '/'){
+        Token op = Token(DIV, current_char, MULT_DIV_K);
+        pos++; 
+        return op;  
+    }
+    
     // return an add/sub token 
     if(current_char == '+' || current_char == '-') {
-        Token op = Token(ADD_SUB, current_char);
+        Token op = Token(ADD_SUB, current_char, ADD_SUB_K);
         pos++; 
         return op;  
     }

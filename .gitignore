@@ -1,6 +1,7 @@
 *.out
 *.o
 *.swp
+*.idea 
 
 # pascal programs have extension .pas
 # my pascal-like programs have extension .apas

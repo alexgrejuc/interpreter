@@ -1,5 +1,6 @@
 #include "ast.hpp" 
 #include "node_visitor.hpp" 
+#include <ctype.h> 
 
 using std::list; 
 

@@ -3,11 +3,15 @@
 
 #define TEMP_MAX_STR 2048 // will remove this limitation 
 
+// i.e. the type of a type. Types are of the same Kind if they could be interchanged in a grammar rule  
+enum Kind{NUMERIC_K, MULT_DIV_K, ADD_SUB_K, CHARACTERS_K, NONE_K};
+
 // the valid types which can be interpreted
 // note that NONE is never used aside from the default constructor
-// TYPE_SIZE is not a token but a value which tracks the number of enums in Type 
-enum Type{INTEGER, ADD_SUB, MULT_DIV, WS, _EOF, PAR, BEGIN, END, DOT, ID, ASSIGN, SEMI, ERROR, NONE};   
+enum Type{INTEGER, ADD_SUB, MULT, DIV, INT_DIV, WS, _EOF, PAR, BEGIN, END, DOT, ID, ASSIGN, SEMI, ERROR, NONE};   
+
 extern const char* TYPE_NAMES[];  
+extern const char* KIND_NAMES[]; 
 
 // a value in the language can either be an integer or an operator 
 union Value{
@@ -22,19 +26,21 @@ class Token{
     private:
         Type type; 
         Value value; 
+        Kind kind; 
 
     public:
         
     Token();
 
-    Token(Type type); // for tokens without a value (e.g. _EOF)
-    Token(Type type, int integer);
-    Token(Type type, char op);
-    Token(Type type, const char* id); 
+    Token(Type type, Kind kind = NONE_K); // for tokens without a value (e.g. _EOF)
+    Token(Type type, int integer, Kind kind = NUMERIC_K);
+    Token(Type type, char op, Kind kind);
+    Token(Type type, const char* id, Kind kind = CHARACTERS_K); 
 
     Value get_value();
 
     Type get_type();
+    Kind get_kind();
 
     // check if this token is the expected type 
     bool is_type(Type t);

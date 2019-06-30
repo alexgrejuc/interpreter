@@ -9,14 +9,32 @@ using namespace std;
 using std::list; 
 using std::cerr; 
 
+void Parser::parse_error(Kind acceptable, Type actual){
+        cerr << "Expected " << KIND_NAMES[acceptable] << " but got " << TYPE_NAMES[actual] << endl; 
+        throw "error eating token";  
+}
+
+void Parser::parse_error(Type acceptable, Type actual){
+        cerr << "Expected " << TYPE_NAMES[acceptable] << " but got " << TYPE_NAMES[actual] << endl; 
+        throw "error eating token";  
+}
+
+void Parser::eat_multdiv(){
+    if(current_token.get_kind() == MULT_DIV_K){
+        current_token = lexer.get_next_token();
+    }
+    else{
+        parse_error(MULT_DIV_K, current_token.get_type());
+    }
+}
+
 // consumes/eats the token and grabs the next one if it is of correct type
 // otherwise there is an error in the expression so we throw an error
 void Parser::eat(Type token_type){
     if(current_token.is_type(token_type)) 
         current_token = lexer.get_next_token(); 
     else{
-        cerr << "Expected " << TYPE_NAMES[token_type] << " but got " << TYPE_NAMES[current_token.get_type()] << endl; 
-        throw "error eating token";  
+        parse_error(token_type, current_token.get_type());
     }
 }
 
@@ -121,7 +139,7 @@ AST* Parser::factor(){
 // eats a *,/ operand and returns its value
 Token Parser::mult_div(){
     Token operand = current_token; 
-    eat(MULT_DIV);
+    eat_multdiv();
     return operand; 
 }
 
@@ -137,7 +155,7 @@ Token Parser::add_sub(){
 AST* Parser::term(){
     AST* left = factor();  
 
-    while(current_token.get_type() == MULT_DIV){
+    while(current_token.get_kind() == MULT_DIV_K){
         Token op = mult_div();
         left = new BinOp(left, op, factor()); 
     }

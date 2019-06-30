@@ -1,14 +1,14 @@
 #ifndef LEXER_HPP
 #define LEXER_HPP
 
-#include <string> 
 #include "token.hpp" 
+#include <string> 
 #include <map> 
 
 using std::string; 
 using std::map; 
 
-/* tokenizes the input string and returns either numerical, operand, or EOF tokens */ 
+/* lexical analysis: tokenizes the input string */ 
 class Lexer{
     private: 
         string text; 
@@ -16,21 +16,11 @@ class Lexer{
         Token current_token;
         
         map<string, Token> reserved_keywords;     
-        
-        int to_int(char c);
-        bool is_ws(char c);
-        bool is_integer(char c);
-        bool is_letter(char c); 
-        bool is_alphanumeric(char c);
-
-        // converts a string to an integer by summing (integer * place value) for all chars 
-        int str_to_int(string literal);
-        
-        char peek(); 
-        Token identify(); 
-
         void reserve_keywords(); 
 
+        char peek(); 
+        Token identify(); 
+    
     public: 
         Lexer();
         Lexer(string text);
