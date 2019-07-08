@@ -14,6 +14,7 @@ char* make_lower(const char* str); // returns a malloc-ed lowercase version of s
 bool is_ws(char c);
 bool is_integer(char c);
 bool is_letter(char c); 
+bool is_identifier(char c);
 bool is_alphanumeric(char c);
 
 #endif

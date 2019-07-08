@@ -42,6 +42,10 @@ bool is_alphanumeric(char c){
    return (is_letter(c) || (c >= '0' && c <= '9')); 
 }
 
+bool is_identifier(char c){
+    return is_letter(c) || c == '_'; 
+}
+
 // converts a string to an integer by summing (integer * place value) for all chars 
 int str_to_int(string literal){
     int num = 0; 

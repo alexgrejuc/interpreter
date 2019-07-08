@@ -1,7 +1,7 @@
 BEGIN
     a := 3;
-    b := a + 1; 
-    c := b / 2; 
+    _b := a + 1; 
+    C := _b / 2; 
     
     BEGIN
         a := 4; 
@@ -9,6 +9,8 @@ BEGIN
         caSE := 3000; 
         insensitive := case; 
     END; 
+
+    integer_division := 10 div 20; 
 
     BEGIN
         precedence := 4 / 2 + 3;  

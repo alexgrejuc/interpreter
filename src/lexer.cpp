@@ -33,7 +33,7 @@ Token Lexer::identify(){
     char name[TEMP_MAX_STR + 1], lower_name[TEMP_MAX_STR + 1];
     int name_pos = 0; 
 
-    while(pos < text.length() && is_alphanumeric(text[pos])){
+    while(pos < text.length() && (is_alphanumeric(text[pos]) || text[pos] == '_')){
         if(name_pos < TEMP_MAX_STR){
             name[name_pos++] = text[pos++];
         }
@@ -63,6 +63,7 @@ Token Lexer::identify(){
 void Lexer::reserve_keywords(){
     reserved_keywords["begin"] = Token(BEGIN, "BEGIN"); 
     reserved_keywords["end"] = Token(END, "END"); 
+    reserved_keywords["div"] = Token(INT_DIV, MULT_DIV_K);
 }
 
 // returns non-whitespace token or EOF token from text  
@@ -115,7 +116,7 @@ Token Lexer::get_next_token(){
         return par;  
     }
 
-    if(is_letter(current_char)){
+    if(is_identifier(current_char)){
         return identify(); 
     }
 

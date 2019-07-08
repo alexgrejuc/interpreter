@@ -53,7 +53,18 @@ Value Interpreter::visit(NoOp* n){
 Value Interpreter::visit(BinOp* n){
     Value val; 
 
-    if(n->get_value().op == '+'){
+    if(n->get_type() == INT_DIV){
+        int numerator = n->left->accept(this).integer; 
+        int denominator = n->right->accept(this).integer;     
+
+        if(denominator != 0){
+            val.integer = numerator / denominator; 
+        }
+        else{
+            throw "Divide by zero!"; 
+        }
+    }
+    else if(n->get_value().op == '+'){
         val.integer = n->left->accept(this).integer + n->right->accept(this).integer;     
     }
     else if (n->get_value().op == '-'){
@@ -62,9 +73,21 @@ Value Interpreter::visit(BinOp* n){
     else if (n->get_value().op == '*'){
         val.integer = n->left->accept(this).integer * n->right->accept(this).integer;     
     }
-    else {
-        val.integer = n->left->accept(this).integer / n->right->accept(this).integer;     
+    else if (n->get_value().op == '/'){
+        // TODO: update to floating point divison 
+        int numerator = n->left->accept(this).integer; 
+        int denominator = n->right->accept(this).integer;     
+
+        if(denominator != 0){
+            val.integer = numerator / denominator; 
+        }
+        else{
+            throw "Error: divide by zero."; 
+        }
     } 
+    else{
+        throw "Error: internal error.";  
+    }
 
     return val;    
 }
