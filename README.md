@@ -1,5 +1,5 @@
 # translators
-My project-based attempt to learn about translators. 
+My attempt to learn about how a programming language is created by writing an interpreter from scratch.
 
 ## Use me! 
 Build by typing `make`. 
